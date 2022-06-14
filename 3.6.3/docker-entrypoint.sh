@@ -24,7 +24,7 @@ if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
         echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS"
         echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED"
         echo "admin.enableServer=$ZOO_ADMINSERVER_ENABLED"
-        echo "clientPort=2181"
+        echo "clientPort=$ZOO_CLIENT_PORT"
     } >> "$CONFIG"
     if [[ -z $ZOO_SERVERS ]]; then
       ZOO_SERVERS="server.1=localhost:2888:3888;2181"
@@ -47,5 +47,23 @@ fi
 if [[ ! -f "$ZOO_DATA_DIR/myid" ]]; then
     echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/myid"
 fi
+
+JVMFLAGS="-XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled"
+
+if [[ -n "${HEAP_OPTS}" ]]; then
+  JVMFLAGS="${HEAP_OPTS} ${JVMFLAGS}"
+else
+  JVMFLAGS="-Xms1G -Xmx1G ${JVMFLAGS}"
+fi
+
+# Run the application in FIPS-approved-only mode
+if [[ "${FIPS_MODE}" = "true" ]]; then
+  echo "INFO: Running in FIPS approved-only mode (org.bouncycastle.fips.approved_only=true)"
+  JVMFLAGS="${JVMFLAGS} -Dorg.bouncycastle.fips.approved_only=true -Djava.security.properties=/etc/instana/zookeeper/java.security.bcfips"
+else
+  JVMFLAGS="-Dcom.redhat.fips=false ${JVMFLAGS}"
+fi
+
+export JVMFLAGS
 
 exec "$@"

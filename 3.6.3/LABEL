@@ -1,0 +1,5 @@
+LABEL com.instana.commit.id=$commit_id
+LABEL com.instana.vendor.version=$vendor_version
+LABEL com.instana.image.version=$image_version
+LABEL com.instana.group=databases
+LABEL com.instana.name=zookeeper

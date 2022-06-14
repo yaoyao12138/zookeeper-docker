@@ -1,0 +1,11 @@
+#
+# Security providers used when global crypto-policies are set to FIPS.
+#
+security.provider.1=org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+security.provider.2=com.sun.net.ssl.internal.ssl.Provider BCFIPS
+security.provider.3=SUN
+
+#
+# Default keystore type used when global crypto-policies are set to FIPS.
+#
+security.keystore.type=BCFKS
