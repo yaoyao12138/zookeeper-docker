@@ -12,7 +12,7 @@ fi
 if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
     CONFIG="$ZOO_CONF_DIR/zoo.cfg"
     {
-        echo "dataDir=$ZOO_DATA_DIR"
+        echo "dataDir=$ZOO_DATA_DIR" 
         echo "dataLogDir=$ZOO_DATA_LOG_DIR"
 
         echo "tickTime=$ZOO_TICK_TIME"
